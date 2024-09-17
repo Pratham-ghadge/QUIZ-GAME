@@ -1,11 +1,8 @@
-
-
 import React, { useState, useEffect } from 'react';
 
 const API_URL = 'https://quiz-backend-sand.vercel.app/api'; // Replace with your actual backend URL
 
 const questionsData = [
-  // ... (your existing questions)
   {
     id: 1,
     question: "What is the capital of France?",
@@ -35,6 +32,7 @@ const App = () => {
   const [score, setScore] = useState(0);
   const [leaderboard, setLeaderboard] = useState([]);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setQuestions(questionsData);
@@ -42,6 +40,7 @@ const App = () => {
   }, []);
 
   const fetchLeaderboard = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch(`${API_URL}/leaderboard`);
       if (!response.ok) {
@@ -50,9 +49,12 @@ const App = () => {
       const data = await response.json();
       console.log("Fetched leaderboard:", data);
       setLeaderboard(data);
+      setError(null);
     } catch (error) {
       console.error('Error fetching leaderboard:', error);
       setError('Failed to fetch leaderboard. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -84,6 +86,7 @@ const App = () => {
 
   const finishQuiz = async () => {
     const finalScore = score + (selectedAnswer === questions[currentQuestionIndex].correctAnswer ? 1 : 0);
+    setIsLoading(true);
     try {
       const response = await fetch(`${API_URL}/leaderboard`, {
         method: 'POST',
@@ -99,10 +102,13 @@ const App = () => {
       console.log("Updated leaderboard:", updatedLeaderboard);
       setLeaderboard(updatedLeaderboard);
       setStage('results');
+      setError(null);
     } catch (error) {
       console.error('Error updating leaderboard:', error);
       setError('Failed to update leaderboard. Your score: ' + finalScore);
       setStage('results');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -171,7 +177,9 @@ const App = () => {
             <h2 className="text-2xl font-bold mb-4">Quiz Results</h2>
             <p className="mb-4">Your score: {score} out of {questions.length}</p>
             <h3 className="text-xl font-semibold mb-2">Leaderboard:</h3>
-            {leaderboard.length > 0 ? (
+            {isLoading ? (
+              <p>Loading leaderboard...</p>
+            ) : leaderboard.length > 0 ? (
               <ul className="list-decimal list-inside mb-4">
                 {leaderboard.map((entry, index) => (
                   <li key={index} className="mb-1">
