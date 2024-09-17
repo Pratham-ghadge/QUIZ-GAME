@@ -1,7 +1,11 @@
+
+
 import React, { useState, useEffect } from 'react';
 
-// This would typically be loaded from an external JSON file
+const API_URL = 'https://your-backend-url.com/api'; // Replace with your actual backend URL
+
 const questionsData = [
+  // ... (your existing questions)
   {
     id: 1,
     question: "What is the capital of France?",
@@ -30,18 +34,34 @@ const App = () => {
   const [selectedAnswer, setSelectedAnswer] = useState('');
   const [score, setScore] = useState(0);
   const [leaderboard, setLeaderboard] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Load questions
     setQuestions(questionsData);
-    // Load leaderboard from local storage
-    const storedLeaderboard = JSON.parse(localStorage.getItem('quizLeaderboard') || '[]');
-    setLeaderboard(storedLeaderboard);
+    fetchLeaderboard();
   }, []);
+
+  const fetchLeaderboard = async () => {
+    try {
+      const response = await fetch(`${API_URL}/leaderboard`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log("Fetched leaderboard:", data);
+      setLeaderboard(data);
+    } catch (error) {
+      console.error('Error fetching leaderboard:', error);
+      setError('Failed to fetch leaderboard. Please try again.');
+    }
+  };
 
   const handleStartQuiz = () => {
     if (name.trim()) {
       setStage('quiz');
+      setError(null);
+    } else {
+      setError('Please enter your name to start the quiz.');
     }
   };
 
@@ -62,14 +82,28 @@ const App = () => {
     }
   };
 
-  const finishQuiz = () => {
-    const newLeaderboard = [...leaderboard, { name, score: score + (selectedAnswer === questions[currentQuestionIndex].correctAnswer ? 1 : 0) }]
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 10);
-    
-    setLeaderboard(newLeaderboard);
-    localStorage.setItem('quizLeaderboard', JSON.stringify(newLeaderboard));
-    setStage('results');
+  const finishQuiz = async () => {
+    const finalScore = score + (selectedAnswer === questions[currentQuestionIndex].correctAnswer ? 1 : 0);
+    try {
+      const response = await fetch(`${API_URL}/leaderboard`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, score: finalScore }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const updatedLeaderboard = await response.json();
+      console.log("Updated leaderboard:", updatedLeaderboard);
+      setLeaderboard(updatedLeaderboard);
+      setStage('results');
+    } catch (error) {
+      console.error('Error updating leaderboard:', error);
+      setError('Failed to update leaderboard. Your score: ' + finalScore);
+      setStage('results');
+    }
   };
 
   const handlePlayAgain = () => {
@@ -78,6 +112,8 @@ const App = () => {
     setSelectedAnswer('');
     setScore(0);
     setStage('registration');
+    setError(null);
+    fetchLeaderboard();
   };
 
   const renderStage = () => {
@@ -135,13 +171,17 @@ const App = () => {
             <h2 className="text-2xl font-bold mb-4">Quiz Results</h2>
             <p className="mb-4">Your score: {score} out of {questions.length}</p>
             <h3 className="text-xl font-semibold mb-2">Leaderboard:</h3>
-            <ul className="list-decimal list-inside mb-4">
-              {leaderboard.map((entry, index) => (
-                <li key={index} className="mb-1">
-                  {entry.name}: {entry.score}
-                </li>
-              ))}
-            </ul>
+            {leaderboard.length > 0 ? (
+              <ul className="list-decimal list-inside mb-4">
+                {leaderboard.map((entry, index) => (
+                  <li key={index} className="mb-1">
+                    {entry.name}: {entry.score}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No leaderboard data available.</p>
+            )}
             <button
               onClick={handlePlayAgain}
               className="w-full bg-cyan-500 text-white py-2 px-4 rounded-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50"
@@ -164,6 +204,7 @@ const App = () => {
             <div className="divide-y divide-gray-200">
               <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
                 {renderStage()}
+                {error && <p className="text-red-500 mt-2">{error}</p>}
               </div>
             </div>
           </div>
