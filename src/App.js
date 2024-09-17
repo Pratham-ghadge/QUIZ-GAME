@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const API_URL = 'https://quiz-backend-blush.vercel.app/api'; // Replace with your actual backend URL
+const API_URL = 'https://quiz-backend-eta-seven.vercel.app/api'; // Replace with your actual backend URL
 
 const questionsData = [
   {
