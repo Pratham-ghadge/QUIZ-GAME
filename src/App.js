@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-const API_URL = 'https://your-backend-url.com/api'; // Replace with your actual backend URL
+const API_URL = 'https://quiz-backend-sand.vercel.app/api'; // Replace with your actual backend URL
 
 const questionsData = [
   // ... (your existing questions)
