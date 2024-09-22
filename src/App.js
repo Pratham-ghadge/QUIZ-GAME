@@ -51,10 +51,11 @@ const questionsData = [
   },
   {
     id: 8,
-    question: "Which TTL component is primarily used in control circuits?",
-    options: ["Diode", "BJT", "MOSFET", "Resistor"],
-    correctAnswer: "BJT"
+    question: "In TTL circuits, what is the role of BJTs?",
+    options: ["To filter noise", "To amplify power", "To switch signals", "To stabilize voltage"],
+    correctAnswer: "To switch signals"
   },
+  
   {
     id: 9,
     question: "What is the main function of TTL logic in digital circuits?",
@@ -97,18 +98,8 @@ const questionsData = [
     options: ["Uses the sum output", "Uses a dedicated carry-in input", "Ignores the carry", "Generates a random output"],
     correctAnswer: "Uses a dedicated carry-in input"
   },
-  {
-    id: 16,
-    question: "How many states does a basic TTL NOT gate have?",
-    options: ["1 state", "2 states", "3 states", "4 states"],
-    correctAnswer: "2 states"
-  },
-  {
-    id: 17,
-    question: "In TTL circuits, what is the role of BJTs?",
-    options: ["To filter noise", "To amplify power", "To switch signals", "To stabilize voltage"],
-    correctAnswer: "To switch signals"
-  }
+  
+  
 ];
 
 // Fisher-Yates shuffle algorithm
