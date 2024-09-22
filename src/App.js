@@ -1,10 +1,10 @@
 
 
-import React, { useState, useEffect } from 'react';
 import electronics from "../src/assets/electronics-bg.jpg"
 
-const API_URL = 'https://quiz-backend-eta-seven.vercel.app/api'; // Replace with your actual backend URL
+import React, { useState, useEffect } from 'react';
 
+const API_URL = 'https://quiz-backend-eta-seven.vercel.app/api';
 
 const questionsData = [
   {
@@ -111,15 +111,14 @@ const questionsData = [
   }
 ];
 
-
 // Fisher-Yates shuffle algorithm
-function shuffleArray(arr) {
+const shuffleArray = (arr) => {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
-}
+};
 
 const App = () => {
   const [stage, setStage] = useState('registration');
@@ -131,9 +130,10 @@ const App = () => {
   const [leaderboard, setLeaderboard] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showAnswer, setShowAnswer] = useState(false);
 
   useEffect(() => {
-    const shuffledQuestions = shuffleArray(questionsData);
+    const shuffledQuestions = shuffleArray([...questionsData]);
     setQuestions(shuffledQuestions);
     fetchLeaderboard();
   }, []);
@@ -146,7 +146,6 @@ const App = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log("Fetched leaderboard:", data);
       setLeaderboard(data);
       setError(null);
     } catch (error) {
@@ -171,15 +170,19 @@ const App = () => {
   };
 
   const handleNextQuestion = () => {
-    if (selectedAnswer === questions[currentQuestionIndex].correctAnswer) {
-      setScore(score + 1);
-    }
-
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedAnswer('');
+    if (!showAnswer) {
+      setShowAnswer(true);
+      if (selectedAnswer === questions[currentQuestionIndex].correctAnswer) {
+        setScore(score + 1);
+      }
     } else {
-      finishQuiz();
+      if (currentQuestionIndex < questions.length - 1) {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        setSelectedAnswer('');
+        setShowAnswer(false);
+      } else {
+        finishQuiz();
+      }
     }
   };
 
@@ -198,7 +201,6 @@ const App = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const updatedLeaderboard = await response.json();
-      console.log("Updated leaderboard:", updatedLeaderboard);
       setLeaderboard(updatedLeaderboard);
       setStage('results');
       setError(null);
@@ -218,6 +220,8 @@ const App = () => {
     setScore(0);
     setStage('registration');
     setError(null);
+    const shuffledQuestions = shuffleArray([...questionsData]);
+    setQuestions(shuffledQuestions);
     fetchLeaderboard();
   };
 
@@ -226,7 +230,7 @@ const App = () => {
       case 'registration':
         return (
           <div className="animate-fadeIn">
-            <h2 className="text-2xl font-bold mb-4 text-black">The Quiz Battle :  Are You Ready ?</h2>
+            <h2 className="text-2xl font-bold mb-4 text-black">The Quiz Battle: Are You Ready?</h2>
             <input
               type="text"
               value={name}
@@ -253,7 +257,15 @@ const App = () => {
             {currentQuestion.options.map((option, index) => (
               <label
                 key={index}
-                className="block mb-2 hover:bg-blue-200 transition ease-in duration-150 text-black"
+                className={`block mb-2 p-2 rounded ${
+                  showAnswer
+                    ? option === currentQuestion.correctAnswer
+                      ? 'bg-green-200'
+                      : selectedAnswer === option
+                      ? 'bg-red-200'
+                      : 'hover:bg-blue-100'
+                    : 'hover:bg-blue-100'
+                } transition ease-in duration-150 text-black`}
               >
                 <input
                   type="radio"
@@ -262,16 +274,21 @@ const App = () => {
                   checked={selectedAnswer === option}
                   onChange={() => handleAnswerSelect(option)}
                   className="mr-2"
+                  disabled={showAnswer}
                 />
                 {option}
               </label>
             ))}
             <button
               onClick={handleNextQuestion}
-              disabled={!selectedAnswer}
+              disabled={!selectedAnswer && !showAnswer}
               className="mt-4 w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-300"
             >
-              {currentQuestionIndex < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
+              {showAnswer
+                ? currentQuestionIndex < questions.length - 1
+                  ? 'Next Question'
+                  : 'Finish Quiz'
+                : 'Check Answer'}
             </button>
           </div>
         );
@@ -280,7 +297,7 @@ const App = () => {
           <div className="animate-fadeIn">
             <h2 className="text-2xl font-bold mb-4 text-black">Quiz Results</h2>
             <p className="mb-4 text-black">Your score: {score} out of {questions.length}</p>
-            <h3 className="text-xl font-semibold mb-2 text-black">Quiz Champions :</h3>
+            <h3 className="text-xl font-semibold mb-2 text-black">Quiz Champions:</h3>
             {isLoading ? (
               <p className="text-black">Loading leaderboard...</p>
             ) : leaderboard.length > 0 ? (
@@ -309,7 +326,7 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-cover bg-center bg-no-repeat py-6 flex flex-col justify-center sm:py-12" 
-         style={{ backgroundImage: `url(${electronics})` }}>
+          style={{ backgroundImage: `url(${electronics})` }}>
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
