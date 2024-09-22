@@ -2,26 +2,112 @@ import React, { useState, useEffect } from 'react';
 
 const API_URL = 'https://quiz-backend-eta-seven.vercel.app/api'; // Replace with your actual backend URL
 
+
 const questionsData = [
   {
     id: 1,
-    question: "What is the capital of France?",
-    options: ["London", "Berlin", "Paris", "Madrid"],
-    correctAnswer: "Paris"
+    question: "Which IC is used for the AND gate in TTL logic?",
+    options: ["7400", "7408", "7432", "7486"],
+    correctAnswer: "7408"
   },
   {
     id: 2,
-    question: "Which planet is known as the Red Planet?",
-    options: ["Mars", "Venus", "Jupiter", "Saturn"],
-    correctAnswer: "Mars"
+    question: "Which TTL gate outputs high only when both inputs are low?",
+    options: ["NAND", "NOR", "XOR", "OR"],
+    correctAnswer: "NOR"
   },
   {
     id: 3,
-    question: "Who painted the Mona Lisa?",
-    options: ["Vincent van Gogh", "Leonardo da Vinci", "Pablo Picasso", "Claude Monet"],
-    correctAnswer: "Leonardo da Vinci"
+    question: "What does the 7400 IC represent?",
+    options: ["AND Gate", "OR Gate", "NAND Gate", "XOR Gate"],
+    correctAnswer: "NAND Gate"
+  },
+  {
+    id: 4,
+    question: "Which component is essential for error detection in digital circuits?",
+    options: ["XOR Gate", "AND Gate", "NOR Gate", "NOT Gate"],
+    correctAnswer: "XOR Gate"
+  },
+  {
+    id: 5,
+    question: "Which logic gate is the backbone of flip-flops and memory circuits?",
+    options: ["AND", "NAND", "OR", "NOR"],
+    correctAnswer: "NAND"
+  },
+  {
+    id: 6,
+    question: "What is the main application of the full-adder?",
+    options: ["Subtraction", "Multiplication", "Division", "Binary Addition"],
+    correctAnswer: "Binary Addition"
+  },
+  {
+    id: 7,
+    question: "How many XOR gates are needed to build a full-adder using TTL?",
+    options: ["1", "2", "3", "4"],
+    correctAnswer: "2"
+  },
+  {
+    id: 8,
+    question: "Which TTL component is primarily used in control circuits?",
+    options: ["Diode", "BJT", "MOSFET", "Resistor"],
+    correctAnswer: "BJT"
+  },
+  {
+    id: 9,
+    question: "What is the main function of TTL logic in digital circuits?",
+    options: ["Signal amplification", "Signal generation", "Logic switching", "Signal filtering"],
+    correctAnswer: "Logic switching"
+  },
+  {
+    id: 10,
+    question: "Which combination of gates is used to form the carry-out in a full-adder using TTL?",
+    options: ["2 AND gates and 1 XOR gate", "2 OR gates and 1 AND gate", "2 XOR gates and 1 OR gate", "3 AND gates and 1 OR gate"],
+    correctAnswer: "3 AND gates and 1 OR gate"
+  },
+  {
+    id: 11,
+    question: "What is the output of a full-adder when A = 1, B = 1, and Cin = 1?",
+    options: ["Sum = 0, Carry = 0", "Sum = 1, Carry = 0", "Sum = 0, Carry = 1", "Sum = 1, Carry = 1"],
+    correctAnswer: "Sum = 1, Carry = 1"
+  },
+  {
+    id: 12,
+    question: "How does TTL differ from CMOS technology?",
+    options: ["Uses diodes instead of BJTs", "Consumes more power but switches faster", "Uses MOSFETs instead of BJTs", "Consumes less power and switches slower"],
+    correctAnswer: "Consumes more power but switches faster"
+  },
+  {
+    id: 13,
+    question: "What is the main characteristic of the 7408 IC in TTL circuits?",
+    options: ["It is a NOT gate IC", "It is an AND gate IC", "It is an OR gate IC", "It is a XOR gate IC"],
+    correctAnswer: "It is an AND gate IC"
+  },
+  {
+    id: 14,
+    question: "How many gates are typically used to build a full-adder circuit?",
+    options: ["3 gates", "4 gates", "5 gates", "6 gates"],
+    correctAnswer: "6 gates"
+  },
+  {
+    id: 15,
+    question: "How does a full-adder handle the carry from previous additions?",
+    options: ["Uses the sum output", "Uses a dedicated carry-in input", "Ignores the carry", "Generates a random output"],
+    correctAnswer: "Uses a dedicated carry-in input"
+  },
+  {
+    id: 16,
+    question: "How many states does a basic TTL NOT gate have?",
+    options: ["1 state", "2 states", "3 states", "4 states"],
+    correctAnswer: "2 states"
+  },
+  {
+    id: 17,
+    question: "In TTL circuits, what is the role of BJTs?",
+    options: ["To filter noise", "To amplify power", "To switch signals", "To stabilize voltage"],
+    correctAnswer: "To switch signals"
   }
 ];
+
 
 // Fisher-Yates shuffle algorithm
 function shuffleArray(arr) {
