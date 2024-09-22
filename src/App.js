@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import electronics from "../src/assets/electronics-bg.jpg"
 
 const API_URL = 'https://quiz-backend-eta-seven.vercel.app/api'; // Replace with your actual backend URL
 
@@ -217,22 +218,23 @@ const App = () => {
     setError(null);
     fetchLeaderboard();
   };
+
   const renderStage = () => {
     switch (stage) {
       case 'registration':
         return (
-          <div>
-            <h2 className="text-2xl font-bold mb-4">Welcome to the Quiz Game!</h2>
+          <div className="animate-fadeIn">
+            <h2 className="text-2xl font-bold mb-4 text-white">The Quiz Battle :  Are You Ready ?</h2>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter your name"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black"
             />
             <button
               onClick={handleStartQuiz}
-              className="mt-4 w-full bg-cyan-500 text-white py-2 px-4 rounded-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50"
+              className="mt-4 w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               Start Quiz
             </button>
@@ -241,11 +243,16 @@ const App = () => {
       case 'quiz':
         const currentQuestion = questions[currentQuestionIndex];
         return (
-          <div>
-            <h2 className="text-2xl font-bold mb-4">Question {currentQuestionIndex + 1} of {questions.length}</h2>
-            <p className="font-semibold mb-4">{currentQuestion.question}</p>
+          <div className="animate-fadeIn">
+            <h2 className="text-2xl font-bold mb-4 text-white">
+              Question {currentQuestionIndex + 1} of {questions.length}
+            </h2>
+            <p className="font-semibold mb-4 text-white">{currentQuestion.question}</p>
             {currentQuestion.options.map((option, index) => (
-              <label key={index} className="block mb-2">
+              <label
+                key={index}
+                className="block mb-2 hover:bg-blue-200 transition ease-in duration-150 text-white"
+              >
                 <input
                   type="radio"
                   name={`question-${currentQuestion.id}`}
@@ -260,7 +267,7 @@ const App = () => {
             <button
               onClick={handleNextQuestion}
               disabled={!selectedAnswer}
-              className="mt-4 w-full bg-cyan-500 text-white py-2 px-4 rounded-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50 disabled:bg-gray-300"
+              className="mt-4 w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-300"
             >
               {currentQuestionIndex < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
             </button>
@@ -268,14 +275,14 @@ const App = () => {
         );
       case 'results':
         return (
-          <div>
-            <h2 className="text-2xl font-bold mb-4">Quiz Results</h2>
-            <p className="mb-4">Your score: {score} out of {questions.length}</p>
-            <h3 className="text-xl font-semibold mb-2">Leaderboard:</h3>
+          <div className="animate-fadeIn">
+            <h2 className="text-2xl font-bold mb-4 text-white">Quiz Results</h2>
+            <p className="mb-4 text-white">Your score: {score} out of {questions.length}</p>
+            <h3 className="text-xl font-semibold mb-2 text-white">Quiz Champions :</h3>
             {isLoading ? (
-              <p>Loading leaderboard...</p>
+              <p className="text-white">Loading leaderboard...</p>
             ) : leaderboard.length > 0 ? (
-              <ul className="list-decimal list-inside mb-4">
+              <ul className="list-decimal list-inside mb-4 text-white">
                 {leaderboard.map((entry, index) => (
                   <li key={index} className="mb-1">
                     {entry.name}: {entry.score}
@@ -283,11 +290,11 @@ const App = () => {
                 ))}
               </ul>
             ) : (
-              <p>No leaderboard data available.</p>
+              <p className="text-white">No leaderboard data available.</p>
             )}
             <button
               onClick={handlePlayAgain}
-              className="w-full bg-cyan-500 text-white py-2 px-4 rounded-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50"
+              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               Play Again
             </button>
@@ -299,13 +306,14 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+    <div className="min-h-screen bg-cover bg-center bg-no-repeat py-6 flex flex-col justify-center sm:py-12" 
+         style={{backgroundImage: `url(${electronics})` }}>
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+        <div className="relative px-4 py-10 bg-gray-900 shadow-lg sm:rounded-3xl sm:p-20">
           <div className="max-w-md mx-auto">
             <div className="divide-y divide-gray-200">
-              <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+              <div className="py-8 text-base leading-6 space-y-4 text-white sm:text-lg sm:leading-7">
                 {renderStage()}
                 {error && <p className="text-red-500 mt-2">{error}</p>}
               </div>
