@@ -23,6 +23,15 @@ const questionsData = [
   }
 ];
 
+// Fisher-Yates shuffle algorithm
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 const App = () => {
   const [stage, setStage] = useState('registration');
   const [name, setName] = useState('');
@@ -35,7 +44,8 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    setQuestions(questionsData);
+    const shuffledQuestions = shuffleArray(questionsData);
+    setQuestions(shuffledQuestions);
     fetchLeaderboard();
   }, []);
 
@@ -121,7 +131,6 @@ const App = () => {
     setError(null);
     fetchLeaderboard();
   };
-
   const renderStage = () => {
     switch (stage) {
       case 'registration':
