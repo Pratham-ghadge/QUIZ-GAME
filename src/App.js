@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from 'react';
 import electronics from "../src/assets/electronics-bg.jpg"
 
@@ -224,7 +226,7 @@ const App = () => {
       case 'registration':
         return (
           <div className="animate-fadeIn">
-            <h2 className="text-2xl font-bold mb-4 text-white">The Quiz Battle :  Are You Ready ?</h2>
+            <h2 className="text-2xl font-bold mb-4 text-black">The Quiz Battle :  Are You Ready ?</h2>
             <input
               type="text"
               value={name}
@@ -244,14 +246,14 @@ const App = () => {
         const currentQuestion = questions[currentQuestionIndex];
         return (
           <div className="animate-fadeIn">
-            <h2 className="text-2xl font-bold mb-4 text-white">
+            <h2 className="text-2xl font-bold mb-4 text-black">
               Question {currentQuestionIndex + 1} of {questions.length}
             </h2>
-            <p className="font-semibold mb-4 text-white">{currentQuestion.question}</p>
+            <p className="font-semibold mb-4 text-black">{currentQuestion.question}</p>
             {currentQuestion.options.map((option, index) => (
               <label
                 key={index}
-                className="block mb-2 hover:bg-blue-200 transition ease-in duration-150 text-white"
+                className="block mb-2 hover:bg-blue-200 transition ease-in duration-150 text-black"
               >
                 <input
                   type="radio"
@@ -276,13 +278,13 @@ const App = () => {
       case 'results':
         return (
           <div className="animate-fadeIn">
-            <h2 className="text-2xl font-bold mb-4 text-white">Quiz Results</h2>
-            <p className="mb-4 text-white">Your score: {score} out of {questions.length}</p>
-            <h3 className="text-xl font-semibold mb-2 text-white">Quiz Champions :</h3>
+            <h2 className="text-2xl font-bold mb-4 text-black">Quiz Results</h2>
+            <p className="mb-4 text-black">Your score: {score} out of {questions.length}</p>
+            <h3 className="text-xl font-semibold mb-2 text-black">Quiz Champions :</h3>
             {isLoading ? (
-              <p className="text-white">Loading leaderboard...</p>
+              <p className="text-black">Loading leaderboard...</p>
             ) : leaderboard.length > 0 ? (
-              <ul className="list-decimal list-inside mb-4 text-white">
+              <ul className="list-decimal list-inside mb-4 text-black">
                 {leaderboard.map((entry, index) => (
                   <li key={index} className="mb-1">
                     {entry.name}: {entry.score}
@@ -290,7 +292,7 @@ const App = () => {
                 ))}
               </ul>
             ) : (
-              <p className="text-white">No leaderboard data available.</p>
+              <p className="text-black">No leaderboard data available.</p>
             )}
             <button
               onClick={handlePlayAgain}
@@ -307,13 +309,13 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-cover bg-center bg-no-repeat py-6 flex flex-col justify-center sm:py-12" 
-         style={{backgroundImage: `url(${electronics})` }}>
+         style={{ backgroundImage: `url(${electronics})` }}>
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-        <div className="relative px-4 py-10 bg-gray-900 shadow-lg sm:rounded-3xl sm:p-20">
+        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
           <div className="max-w-md mx-auto">
             <div className="divide-y divide-gray-200">
-              <div className="py-8 text-base leading-6 space-y-4 text-white sm:text-lg sm:leading-7">
+              <div className="py-8 text-base leading-6 space-y-4 text-black sm:text-lg sm:leading-7">
                 {renderStage()}
                 {error && <p className="text-red-500 mt-2">{error}</p>}
               </div>
